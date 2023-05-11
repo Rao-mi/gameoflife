@@ -36,10 +36,19 @@ interagente (4 possibilità)*/
 /* crea vincoli ovvero cell inexistent
 x: occupa le diagonali
 +: occupa le due linee a croce nella matrice
-random: genera vincoli casuali*/
-    void set_constrains(std::string a);
+random: genera N vincoli disposti casualmente
+total_random: genera un numero casuale di vincoli casuali*/
+    void set_constrains(std::string a, int N);
+// resetta tutto a dead
+    void reset();
+/* setta vive e recovered randomicamente, string può essere
+alive: setta le vive e con N indichiamno quante
+recovered: setta le recovered e con N indichiamo quante*/
+    void set_cells(std::string a, int N);
 // setta vincoli, recovered e alive tramite grid    
     void set_grid (Grid a);  
+// estrae m_grid
+    Grid get_grid();
 // returna una griglia dei soli costrains e dead in tutte gli altri casi
     Grid extract_constrains ();
 // returna il numero dei 4 tipi in ordine S-E-I-R, in un vector di interi
@@ -53,7 +62,7 @@ random: genera vincoli casuali*/
 classic: per conway
 SEIR: per l'implementazione (recovered),
 random: ovvero i 4 primi vicini sono casuali
-total random: sia il numero che la posizione dei primi vicini è randomica
+total_random: sia il numero che la posizione dei primi vicini è randomica
 */
 World evolve(World const& current, std::string geometria);
 
