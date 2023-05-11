@@ -66,14 +66,15 @@ void World::print() {
 
 
 // crea vincoli ovvero cell inexistent per ora a croce a x e random!
-void World::set_constrains(std::string a){
+void World::set_constrains(std::string a, int N){
     int rnd_n = std::rand() % (m_side*m_side);
     int rnd_r;
     int rnd_c;
     if (a=="x") {
         for (int i=0; i<m_side; i++) {
+            while (m_grid[i+m_side*i]==Cell::Dead) {
             m_grid[i+m_side*i]= Cell::Inexistent;
-            m_grid[m_side+m_side*i] = Cell::Inexistent;
+            m_grid[m_side+m_side*i] = Cell::Inexistent;}
         }}
 
 else {
@@ -92,17 +93,64 @@ else {
         m_grid[(m_side/2)+m_side*i]= Cell::Inexistent;
     }}
  else {
-    if (a=="random") {
+    if (a=="total_random") {
         for (int i=0; i<rnd_n; i++) {
             rnd_r = rand() % m_side;
             rnd_c = rand() % m_side;
+            while (m_grid[rnd_r+m_side*rnd_c]==Cell::Dead) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;}
+            m_grid[rnd_r+m_side*rnd_c]= Cell::Inexistent;
+    }}
+else {
+    if (a=="random") {
+    for (int i=0; i<N; i++) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;
+            while (m_grid[rnd_r+m_side*rnd_c]==Cell::Dead) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;}
             m_grid[rnd_r+m_side*rnd_c]= Cell::Inexistent;
     }}
 
-
-}}}
-// versione con grid
+}}}}
 };
+//resetta tutto a dead
+void World::reset() {
+    for (int i=0; i<m_side; i++) {
+    for (int j=0; j<m_side; j++) { 
+        m_grid[i+m_side*j]= Cell::Dead;
+    }}
+}
+
+//settiaml
+void World::set_cells(std::string a, int N){
+    int rnd_r;
+    int rnd_c;
+    if (a=="Alive") {
+        for (int i=0; i<N; i++) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;
+            while (m_grid[rnd_r+m_side*rnd_c]==Cell::Dead) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;   
+            }
+            m_grid[rnd_r+m_side*rnd_c]= Cell::Alive;
+        }}
+
+else {
+    if (a=="Recovered") {
+        for (int i=0; i<N; i++) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;
+            while (m_grid[rnd_r+m_side*rnd_c]==Cell::Dead) {
+            rnd_r = rand() % m_side;
+            rnd_c = rand() % m_side;   
+            }
+            m_grid[rnd_r+m_side*rnd_c]= Cell::Recovered;
+        }}
+}};
+// versione con grid
 void World::set_grid(Grid a) {
 int N = m_side;
 for (int i=0; i<N; i++) {
@@ -119,7 +167,10 @@ for (int i=0; i<N; i++) {
     }}}
     }
 };
-
+// returna m_grid
+Grid World::get_grid() {
+    return m_grid;
+}
 
 
 // estrae un grid con i vincoli 
@@ -147,7 +198,7 @@ std::vector<int> World::get_SEIR (){
     count = m_grid[(i+1)*m_side+j]== Cell::Alive ? count+1 : count;
     count = m_grid[i*m_side+j+1]== Cell::Alive ? count+1 : count;
     count = m_grid[i*m_side+j-1]== Cell::Alive ? count+1 : count;
-        if (m_grid[i*m_side+j]==Cell::Alive && (count==2 || count==3))
+        if (m_grid[i*m_side+j]==Cell::Alive && count==2)
         {SEIR[1]+=1;}
         else {
             if (m_grid[i*m_side+j]==Cell::Dead) 
